@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Checks</title>
+    <!-- Vue 3 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+    <div id="app" class="w-full max-w-2xl mx-2 my-4">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-xl">
+                Startup Checks
+            </h3>
+           <div class="flex space-x-2">
+            <button @click="fillTestDataSuccess()" class="text-sm text-green-700 border-green-700 border p-2 rounded">Fill Success
+                Data</button>
+
+                <button @click="fillTestDataFailed()" class="text-sm text-red-700 border-red-700 border p-2 rounded">Fill Failed
+                    Data</button>
+           </div>
+        </div>
+        <form @submit.prevent="evaluateStartup" class="bg-white shadow-md rounded px-3 pt-6 pb-8 mb-4">
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="mb-2" v-for="(field,index) in fields" :key="index">
+                    <label class="block text-gray-700 text-sm mb-1 capitalize" class="block text-gray-700 text-sm mb-1"
+                        for="fundingRounds">
+                        [[ parseLabel(field) ]]
+                    </label>
+                    <input required="" v-model.number="formData[field]" step="any"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="fundingRounds" type="number" :placeholder="`Enter ${parseLabel(field)}`">
+                </div>
+            </div>
+
+
+            <div class="mt-4">
+                <div v-if="result" class="mb-4 p-4 border rounded" :class="{
+                        'bg-green-100 border-green-400 text-green-700': result.outcome,
+                        'bg-red-100 border-red-400 text-red-700': !result.outcome
+                    }">
+                    <p>
+                        Based on the data you provided, the startup is [[ result.outcome ? 'likely' : 'unlikely' ]] to
+                        succeed
+                        with an accuracy level of [[ accuracyLevel ]]%.
+                    </p>
+                </div>
+
+                <button type="submit" :disabled="loading"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+                    type="submit">
+                    [[ loading ? 'Evaluating...' : 'Evaluate' ]]
+                </button>
+            </div>
+        </form>
+
+
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    loading: false,
+                    accuracyLevel: 71.1,
+                    result: null,
+                    formData: {},
+                    fields: [
+                        "seed",
+                        "venture",
+                        "age_first_funding",
+                        "round_D",
+                        "funding_rounds",
+                        "round_A",
+                        "round_B",
+                        "founded_year",
+                        "grant",
+                        "angel",
+                        "debt_financing",
+                        "market_Clean Technology",
+                        "private_equity",
+                        "convertible_note",
+                        "market_Advertising",
+                        "market_Analytics",
+                        "market_Biotechnology",
+                        "round_E",
+                        "market_Other",
+                        "market_Enterprise Software",
+                        "market_Finance",
+                        "market_Health Care",
+                        "market_Consulting",
+                    ],
+                };
+            },
+            methods: {
+                parseLabel(field) {
+                    return field.replace(/_/g, ' ');
+                },
+                fillTestDataFailed(){
+                    this.formData =  {
+                        "funding_rounds": 1.0,
+                        "founded_month": 3.0,
+                        "founded_year": 2005.0,
+                        "seed": 4500000.0,
+                        "venture": 0.0,
+                        "equity_crowdfunding": 0.0,
+                        "undisclosed": 0.0,
+                        "convertible_note": 0.0,
+                        "debt_financing": 0.0,
+                        "angel": 0.0,
+                        "grant": 0.0,
+                        "private_equity": 0.0,
+                        "secondary_market": 0.0,
+                        "product_crowdfunding": 0.0,
+                        "round_A": 0.0,
+                        "round_B": 0.0,
+                        "round_C": 0.0,
+                        "round_D": 0.0,
+                        "round_E": 0.0,
+                        "round_F": 0.0,
+                        "age_first_funding": 0.0,
+                        "market_Advertising": 0,
+                        "market_Analytics": 0,
+                        "market_Biotechnology": 0,
+                        "market_Clean Technology": 0,
+                        "market_Consulting": 0,
+                        "market_Curated Web": 0,
+                        "market_E-Commerce": 0,
+                        "market_Education": 0,
+                        "market_Enterprise Software": 0,
+                        "market_Finance": 0,
+                        "market_Games": 0,
+                        "market_Hardware + Software": 0,
+                        "market_Health Care": 0,
+                        "market_Health and Wellness": 0,
+                        "market_Hospitality": 0,
+                        "market_Manufacturing": 0,
+                        "market_Mobile": 0,
+                        "market_Other": 1,
+                        "market_Security": 0,
+                        "market_Social Media": 0,
+                        "market_Software": 0,
+                        // "age_first_funding": 2.0191780821917806,
+                        // "angel": 0.0,
+                        // "convertible_note": 300000.67,
+                        // "debt_financing": 500000.34,
+                        // "equity_crowdfunding": 0.0,
+                        // "undisclosed": 0.0,
+                        // "founded_month": 1.0,
+                        // "founded_year": 2008.0,
+                        // "funding_rounds": 2.0,
+                        // "grant": 200000.23,
+                        // "market_Advertising": 0.34,
+                        // "market_Analytics": 0.56,
+                        // "market_Biotechnology": 0.78,
+                        // "market_Clean Technology": 0.45,
+                        // "market_Consulting": 0.45,
+                        // "market_Curated Web": 0.23,
+                        // "market_E-Commerce": 0.23,
+                        // "market_Education": 0.78,
+                        // "market_Enterprise Software": 0.56,
+                        // "market_Finance": 0.78,
+                        // "market_Games": 0.67,
+                        // "market_Hardware + Software": 0.12,
+                        // "market_Health and Wellness": 0.56,
+                        // "market_Health Care": 0.34,
+                        // "market_Hospitality": 0.67,
+                        // "market_Manufacturing": 0.56,
+                        // "market_Mobile": 0.67,
+                        // "market_Other": 1,
+                        // "market_Security": 0.34,
+                        // "market_Social Media": 0.89,
+                        // "market_Software": 0.45,
+                        // "private_equity": 2000000.89,
+                        // "product_crowdfunding": 0.0,
+                        // "round_A": 0.0,
+                        // "round_B": 8000000.78,
+                        // "round_C": 10000000.56,
+                        // "round_D": 12000000.34,
+                        // "round_E": 0.0,
+                        // "round_F": 0.0,
+                        "secondary market": 0.0,
+                        // "seed": 0.0,
+                        // "venture": 918000.0
+                    }
+                },
+                
+                fillTestDataSuccess() {
+                    this.formData = {
+                        "funding_rounds": 1.0,
+                        "founded_month": 1.0,
+                        "founded_year": 2001.0,
+                        "seed": 0.0,
+                        "venture": 5000000.0,
+                        "equity_crowdfunding": 0.0,
+                        "undisclosed": 0.0,
+                        "convertible_note": 0.0,
+                        "debt_financing": 0.0,
+                        "angel": 0.0,
+                        "grant": 0.0,
+                        "private_equity": 0.0,
+                        "secondary_market": 0.0,
+                        "product_crowdfunding": 0.0,
+                        "round_A": 0.0,
+                        "round_B": 0.0,
+                        "round_C": 0.0,
+                        "round_D": 0.0,
+                        "round_E": 0.0,
+                        "round_F": 0.0,
+                        "age_first_funding": 9.019178,
+                        "market_Advertising": 0,
+                        "market_Analytics": 0,
+                        "market_Biotechnology": 0,
+                        "market_Clean Technology": 0,
+                        "market_Consulting": 0,
+                        "market_Curated Web": 0,
+                        "market_E-Commerce": 0,
+                        "market_Education": 0,
+                        "market_Enterprise Software": 0,
+                        "market_Finance": 0,
+                        "market_Games": 0,
+                        "market_Hardware + Software": 0,
+                        "market_Health Care": 0,
+                        "market_Health and Wellness": 0,
+                        "market_Hospitality": 0,
+                        "market_Manufacturing": 0,
+                        "market_Mobile": 1,
+                        "market_Other": 0,
+                        "market_Security": 0,
+                        "market_Social Media": 0,
+                        "market_Software": 0,
+                        "secondary market": 0.0,
+                    }
+                },
+                checkUndefinedFields(){
+                    if(!this.formData['secondary market']){
+                        this.formData['secondary market'] = 0.0
+                        this.formData['undisclosed'] = 0.0
+                        this.formData['equity_crowdfunding'] = 0.0
+                        this.formData['market_Security'] = 0.0
+                        this.formData['founded_month'] = 1.0
+                        this.formData['market_Manufacturing'] = 0.0
+                        this.formData['product_crowdfunding'] = 0.0
+                        this.formData['round_C'] = 0.0
+                        this.formData['market_Mobile'] = 0.0
+                        this.formData['market_Hospitality'] = 0.0
+                        this.formData['market_Health and Wellness'] = 0.0
+                        this.formData['market_Games'] = 0.0
+                        this.formData['market_Finance'] = 0.0
+                        this.formData['market_Enterprise Software'] = 0.0
+                        this.formData['market_Education'] = 0.0
+                        this.formData['market_E-Commerce'] = 0.0
+                        this.formData['market_Curated Web'] = 0.0
+                        this.formData['round_F'] = 0.0
+                        this.formData['market_Social Media'] = 0.0
+                        this.formData['market_Hardware + Software'] = 0.0
+                        this.formData['market_Software'] = 0.0
+                    }
+                },
+                evaluateStartup() {
+                    this.loading = true;
+
+                   this.checkUndefinedFields();
+
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(this.formData)
+                    };
+
+                    setTimeout(() => {
+                        fetch('/analyse', requestOptions)
+                            .then(response => response.json())
+                            .then(data => {
+                                this.loading = false;
+                                this.result = data;
+                            }).finally(() => {
+                                this.loading = false;
+                            });
+                    }, 1500);
+                }
+            }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
